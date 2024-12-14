@@ -76,8 +76,9 @@ class camera {
 
             auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
             auto ray_direction = pixel_sample - ray_origin;
+            auto ray_time = random_double();
 
-            return ray(ray_origin, ray_direction);
+            return ray(ray_origin, ray_direction, ray_time);
         }
 
         vec3 sample_square() const {
@@ -167,6 +168,8 @@ class camera {
                           << " (Δt̄= " << avg_delta.count() << "s)" << " | "
                           << "Scanlines remaining: " << (image_height - j) << std::flush;
 
+
+                // Actual rendering
                 for (int i = 0; i < image_width; i++) {
                     color pixel_color(0,0,0);
                     for (int sample = 0; sample < samples_per_pixel; sample++) {
