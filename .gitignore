@@ -1,2 +1,6 @@
-build
 .cache
+.fleet
+.DS_Store
+
+build
+renders
