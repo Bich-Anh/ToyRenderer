@@ -19,11 +19,11 @@ class interval
     max = a.max >= b.max ? a.max : b.max;
   }
 
-  double size() { return max - min; }
+  double size() const { return max - min; }
 
-  bool contains(double x) { return (min <= x && x <= max); }
+  bool contains(double x) const { return (min <= x && x <= max); }
 
-  bool surrounds(double x) { return (min < x && x < max); }
+  bool surrounds(double x) const { return (min < x && x < max); }
 
   double clamp(double x) const
   {
