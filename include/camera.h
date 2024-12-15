@@ -8,23 +8,23 @@
 #include "hittable_list.h"
 #include "material.h"
 
-class camera {
+class camera
+{
+ private:
+  int image_height;            // Rendered image height
+  double pixel_samples_scale;  // Color scale factor for a sum of pixel samples
+  point3 center;               // Camera Center
+  point3 pixel00_loc;          // Location of pixel (0,0)
+  vec3 pixel_delta_u;          // Offset to pixel to the right
+  vec3 pixel_delta_v;          // offset to pixel below
 
-private:
-  int image_height;           // Rendered image height
-  double pixel_samples_scale; // Color scale factor for a sum of pixel samples
-  point3 center;              // Camera Center
-  point3 pixel00_loc;         // Location of pixel (0,0)
-  vec3 pixel_delta_u;         // Offset to pixel to the right
-  vec3 pixel_delta_v;         // offset to pixel below
+  vec3 u, v, w;  // Camera frame basis vectors
 
-  vec3 u, v, w; // Camera frame basis vectors
+  vec3 defocus_disk_u;  // Defocus disk horizontal radius
+  vec3 defocus_disk_v;  // Defocus disk vertical radius
 
-  vec3 defocus_disk_u; // Defocus disk horizontal radius
-  vec3 defocus_disk_v; // Defocus disk vertical radius
-
-  void initialize() {
-
+  void initialize()
+  {
     // Calculate the image height, and ensure that it's at least 1.
     int img_height = int(image_width / aspect_ratio);
     image_height = (img_height < 1) ? 1 : img_height;
@@ -43,11 +43,11 @@ private:
         viewport_height * (double(image_width) / image_height);
 
     // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
-    w = unit_vector(lookfrom - lookat); // Direction the camera is looking at
-                                        // (right hand coordinate system)
+    w = unit_vector(lookfrom - lookat);  // Direction the camera is looking at
+                                         // (right hand coordinate system)
     u = unit_vector(cross(
-        vup, w)); // Making a vector orthogonal to the plane made by w and vup
-    v = cross(w, u); // Making a third vector orthogonal to the w and u
+        vup, w));  // Making a vector orthogonal to the plane made by w and vup
+    v = cross(w, u);  // Making a third vector orthogonal to the w and u
 
     // Calculate the vectors across the horizontal and down the vertical
     // viewport edges.
@@ -70,8 +70,8 @@ private:
     defocus_disk_v = v * defocus_radius;
   }
 
-  ray get_ray(int i, int j) const {
-
+  ray get_ray(int i, int j) const
+  {
     // Construct a camera ray originating from the defocus disk and directed at
     // a randomly sampled point around the pixel location i, j.
 
@@ -86,24 +86,28 @@ private:
     return ray(ray_origin, ray_direction, ray_time);
   }
 
-  vec3 sample_square() const {
+  vec3 sample_square() const
+  {
     // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit
     // square.
     return vec3(random_double() - 0.5, random_double() - 0.5, 0);
   }
 
-  color ray_color(const ray &r, int depth, const hittable_list &world) const {
-
+  color ray_color(const ray& r, int depth, const hittable_list& world) const
+  {
     hit_record rec;
 
-    if (depth <= 0) {
+    if (depth <= 0)
+    {
       return color(0, 0, 0);
     }
 
-    if (world.hit(r, interval(0.001, infinity), rec)) {
+    if (world.hit(r, interval(0.001, infinity), rec))
+    {
       ray scattered;
       color attenuation;
-      if (rec.mat->scatter(r, rec, attenuation, scattered)) {
+      if (rec.mat->scatter(r, rec, attenuation, scattered))
+      {
         return attenuation * ray_color(scattered, depth - 1, world);
       }
       return color(0, 0, 0);
@@ -114,36 +118,38 @@ private:
     return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
   }
 
-  point3 defocus_disk_sample() const {
+  point3 defocus_disk_sample() const
+  {
     // Returns a random point in the camera defocus disk.
     auto p = random_in_unit_disk();
     return center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
   }
 
-public:
-  double aspect_ratio = 1.0;  // Ratio of image width over height
-  int image_width = 100;      // Rendered image width in pixel count
-  int samples_per_pixel = 10; // Count of random samples for each pixel
-  int max_depth = 10;         // Maximum number of ray bounces into scene
+ public:
+  double aspect_ratio = 1.0;   // Ratio of image width over height
+  int image_width = 100;       // Rendered image width in pixel count
+  int samples_per_pixel = 10;  // Count of random samples for each pixel
+  int max_depth = 10;          // Maximum number of ray bounces into scene
 
-  double vfov = 90;                  // Vertical view angle (field of view)
-  point3 lookfrom = point3(0, 0, 0); // Point camera is looking from
-  point3 lookat = point3(0, 0, -1);  // Point camera is looking at
-  vec3 vup = vec3(0, 1, 0);          // Camera-relative "up" direction
+  double vfov = 90;                   // Vertical view angle (field of view)
+  point3 lookfrom = point3(0, 0, 0);  // Point camera is looking from
+  point3 lookat = point3(0, 0, -1);   // Point camera is looking at
+  vec3 vup = vec3(0, 1, 0);           // Camera-relative "up" direction
 
-  double defocus_angle = 0; // Variation angle of rays through each pixel
+  double defocus_angle = 0;  // Variation angle of rays through each pixel
   double focus_dist =
-      10; // Distance from camera lookfrom point to plane of perfect focus
+      10;  // Distance from camera lookfrom point to plane of perfect focus
 
-  void render(const hittable_list &world) {
-
+  void render(const hittable_list& world)
+  {
     initialize();
 
     // Create output file for the render
     // TODO: Move this to its own thing at some point
     auto filename = generate_filename("renders/image", "ppm");
     std::ofstream outfile(filename);
-    if (!outfile) {
+    if (!outfile)
+    {
       std::cerr << "Error: Could not open the file for writing.\n";
       return;
     }
@@ -157,8 +163,8 @@ public:
     auto now = std::chrono::steady_clock::now();
 
     // Render each scanlines
-    for (int j = 0; j < image_height; j++) {
-
+    for (int j = 0; j < image_height; j++)
+    {
       // Calculate metrics
       auto temp = now;
       now = std::chrono::steady_clock::now();
@@ -171,9 +177,11 @@ public:
                 << "Scanlines remaining: " << (image_height - j) << std::flush;
 
       // Actual rendering
-      for (int i = 0; i < image_width; i++) {
+      for (int i = 0; i < image_width; i++)
+      {
         color pixel_color(0, 0, 0);
-        for (int sample = 0; sample < samples_per_pixel; sample++) {
+        for (int sample = 0; sample < samples_per_pixel; sample++)
+        {
           ray r = get_ray(i, j);
           pixel_color += ray_color(r, max_depth, world);
         }

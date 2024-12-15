@@ -1,0 +1,18 @@
+# .clang-format
+
+BasedOnStyle: Google
+
+# Adjusting specific Google style configurations
+IndentWidth: 2                 # Google style uses 2 spaces for indentation
+TabWidth: 2                    # Tab width is also 2 spaces
+UseTab: Never                  # No tabs, use spaces instead
+ColumnLimit: 80                # Google style recommends a column limit of 80
+MaxEmptyLinesToKeep: 1         # Only 1 empty line between functions and classes
+AllowShortFunctionsOnASingleLine: true  # Allow short functions on a single line
+BreakBeforeBraces: Allman     # Google prefers braces to be on a new line (Allman style)
+SpaceBeforeParens: ControlStatements  # Space before parentheses for control statements
+SpaceAfterCStyleCast: true         # Adds space after C-style casts
+PointerAlignment: Left            # `int* x` instead of `int *x`
+DerivePointerAlignment: false     # Prevents automatic pointer alignment adjustment
+NamespaceIndentation: All         # Indentation inside namespaces
+AlignAfterOpenBracket: Align  # Aligns function arguments after an open bracket

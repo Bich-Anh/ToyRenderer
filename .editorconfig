@@ -1,0 +1,54 @@
+# EditorConfig is awesome: https://editorconfig.org
+
+# Top-most EditorConfig file
+root = true
+
+# C++ files
+[*.{cpp,hpp,cxx,hxx,cc,h}]
+
+# Set charset to UTF-8
+charset = utf-8
+
+# Indentation style
+indent_style = space       # Use spaces (instead of tabs)
+indent_size = 4            # Set indentation size to 4 spaces
+
+# End of line settings
+end_of_line = lf           # Use LF for line endings
+insert_final_newline = true # Ensure final newline at the end of files
+
+# Trim trailing whitespace
+trim_trailing_whitespace = true
+
+# Place a blank line at the end of the file
+max_line_length = 80       # Ensure no lines exceed 80 characters
+# Wrap lines exceeding the max line length at 80 characters
+# This is a suggestion, actual wrapping behavior depends on the editor's capabilities
+
+# C++ Specific Settings
+[*.cpp]
+# Space between `if`, `while`, `for`, `switch` and the parentheses
+cpp_style_space_around_operators = true
+cpp_style_space_after_type = true
+
+# Opening brace on the same line (K&R style)
+brace_style = 1TBS # 1TBS style places the opening brace on the same line as the function declaration
+
+# No space before parentheses in function calls
+function_call_parens_no_space = true
+
+# No space between the function name and opening parenthesis
+function_call_parens_no_space = true
+
+# One space between `if`, `while`, `for`, and the parentheses
+space_after_control_statement = true
+
+# Align assignments in column for readability
+align_assignments = true
+
+# Comment block settings: Use `//` for single-line comments and `/* */` for block comments.
+comment_style = block
+
+# C++ code will prefer camelCase for variable names, PascalCase for classes and types
+cpp_variable_style = camelCase
+cpp_class_style = PascalCase
