@@ -40,6 +40,11 @@ inline double random_double(double min, double max) {
     return min + (max - min) * random_double();
 }
 
+inline int random_int(int min, int max) {
+    // Returns a random integer in [min,max].
+    return int(random_double(min, max+1));
+}
+
 std::string generate_filename(std::string name_prefix, std::string extension) {
     // Get the current time as a time_t object
     auto now = std::chrono::system_clock::now();
