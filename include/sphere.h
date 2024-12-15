@@ -10,16 +10,25 @@ class sphere : public hittable {
         ray center;
         double radius;
         shared_ptr<material> mat;
+        aabb bbox;
 
     public:
 
         // Stationnary sphere
         sphere(const point3& center, double radius, shared_ptr<material> mat)
-            : center(center, vec3(0,0,0)), radius(std::fmax(0,radius)), mat(mat) {}
+            : center(center, vec3(0,0,0)), radius(std::fmax(0,radius)), mat(mat) {
+            auto rvec = vec3(radius, radius, radius);
+            bbox = aabb(center - rvec, center + rvec);
+        }
 
         // Moving sphere
         sphere(const point3& center1, const point3& center2, double radius, shared_ptr<material> mat)
-            : center(center1, center2 - center1), radius(std::fmax(0,radius)), mat(mat) {}
+            : center(center1, center2 - center1), radius(std::fmax(0,radius)), mat(mat) {
+            auto rvec = vec3(radius, radius, radius);
+            auto bbox1 = aabb(center.at(0) - rvec, center.at(0) + rvec);
+            auto bbox2 = aabb(center.at(1) - rvec, center.at(1) + rvec);
+            bbox = aabb(bbox1, bbox2);
+        }
 
         bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
 
@@ -52,6 +61,9 @@ class sphere : public hittable {
 
             return true;
         }
+
+        aabb bounding_box() const override { return bbox; }
+
     
 
 };
