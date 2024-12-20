@@ -6,6 +6,18 @@
 
 class aabb
 {
+ private:
+  void pad_to_minimum()
+  {
+    // Adjust the AABB so that no side is narrower than some delta, padding if
+    // necessary
+    double delta = 0.0001;
+
+    if (x.size() < delta) x = x.expand(delta);
+    if (y.size() < delta) x = y.expand(delta);
+    if (z.size() < delta) x = z.expand(delta);
+  }
+
  public:
   interval x, y, z;
 
@@ -14,6 +26,7 @@ class aabb
   aabb(const interval& x, const interval& y, const interval& z)
       : x(x), y(y), z(z)
   {
+    pad_to_minimum();
   }
   aabb(const point3& a, const point3& b)
   {
